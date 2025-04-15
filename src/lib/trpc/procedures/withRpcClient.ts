@@ -20,7 +20,7 @@ export const withRpcClient = t.procedure.use(async ({ ctx, next }) => {
     // Cache rpc client and try to reuse it
     let rpcClientPromise = cachedRpcClients[chainConfig.chainUrl];
     if (!rpcClientPromise) {
-      rpcClientPromise = RpcClient.create({
+      rpcClientPromise = RpcClient.connect({
         url: chainConfig.chainUrl,
         batch: 10,
         batchInterval: 500,

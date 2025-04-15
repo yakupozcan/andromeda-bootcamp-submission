@@ -32,7 +32,11 @@ export class RpcClient {
     );
   }
 
-  static async create(endpoint: RpcClientEndpoint): Promise<RpcClient> {
+  static create(cometClient: CometClient) {
+    return new RpcClient(cometClient);
+  }
+
+  static async connect(endpoint: RpcClientEndpoint): Promise<RpcClient> {
     let rpcClient: TenderintRpcClient;
     if ("url" in endpoint) {
       rpcClient = new HttpBatchClient(endpoint.url, {
