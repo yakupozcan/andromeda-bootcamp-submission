@@ -6,6 +6,7 @@ export namespace KERNEL {
     VFS = "vfs",
     ECONOMICS = "economics",
     ADODB = "adodb",
+    IBC_REGISTRY = "ibc-registry",
   }
 
   export const keyAddressMsg = (key: KernelKey) => {
