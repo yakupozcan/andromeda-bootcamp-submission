@@ -12,9 +12,10 @@ export const kernelRouter = createTRPCRouter({
                 key: z.nativeEnum(KERNEL.KernelKey),
             }),
         )
-        .query<KERNEL.KeyAddressResponse>(({ input, ctx }) => {
+        .query<KERNEL.KeyAddressResponse>(async ({ input, ctx }) => {
+            const rpcClient = await ctx.getRpcClient(input["chain-identifier"]);
             return queryKernelKeyAddress(
-                ctx.chainConfig.lcdUrl,
+                rpcClient,
                 ctx.chainConfig.kernelAddress,
                 input.key,
             );

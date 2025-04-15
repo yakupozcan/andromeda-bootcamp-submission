@@ -3,13 +3,14 @@ import type { CacheEntry } from "@epic-web/cachified";
 import { cachified } from "@epic-web/cachified";
 import { LRUCache } from "lru-cache";
 import { LcdClient } from "@/lib/andrjs/lcd-client";
+import { RpcClient } from "@/lib/andrjs/rpc-client";
 
 const cache = new LRUCache<string, CacheEntry>({
     max: 5,
 });
 
 export async function queryKernelKeyAddress(
-    lcdUrl: string,
+    client: RpcClient | LcdClient,
     kernelAddress: string,
     key: KERNEL.KernelKey,
 ) {
@@ -18,9 +19,8 @@ export async function queryKernelKeyAddress(
         cache,
         ttl: 1000 * 60 * 60 * 24, // 1 day
         getFreshValue: async () => {
-            const lcdClient = new LcdClient(lcdUrl);
             const address =
-                await lcdClient.queryContractSmart<KERNEL.KeyAddressResponse>(
+                await client.queryContractSmart<KERNEL.KeyAddressResponse>(
                     kernelAddress,
                     KERNEL.keyAddressMsg(key),
                 );

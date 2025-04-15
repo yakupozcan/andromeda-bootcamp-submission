@@ -11,9 +11,9 @@ import { withContractAddress } from "@/lib/trpc/procedures/withContractAddress";
 export const appContractRouter = createTRPCRouter({
     getComponents: withContractAddress
         .input(z.object({}))
-        .query<APP_CONTRACT.GetComponentsResponse>(async ({ ctx }) => {
+        .query<APP_CONTRACT.GetComponentsResponse>(async ({ ctx, input }) => {
             const components = await queryAppGetComponents(
-                ctx.chainConfig.lcdUrl,
+                await ctx.getRpcClient(input["chain-identifier"]),
                 ctx.resolvedContractAddress,
             );
             return components;
@@ -21,9 +21,9 @@ export const appContractRouter = createTRPCRouter({
 
     getAddressesWithNames: withContractAddress
         .input(z.object({}))
-        .query<APP_CONTRACT.GetAddressesWithNamesResponse>(async ({ ctx }) => {
+        .query<APP_CONTRACT.GetAddressesWithNamesResponse>(async ({ ctx, input }) => {
             const addresses = await queryAppGetAddressesWithNames(
-                ctx.chainConfig.lcdUrl,
+                await ctx.getRpcClient(input["chain-identifier"]),
                 ctx.resolvedContractAddress,
             );
             return addresses;

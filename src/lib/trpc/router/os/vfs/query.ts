@@ -8,13 +8,14 @@ import { bech32 } from "bech32";
 import { queryKernelKeyAddress } from "../kernel/query";
 import { KERNEL } from "@/lib/andrjs/ados/kernel";
 import { IChainConfig } from "../../chain/types";
+import { RpcClient } from "@/lib/andrjs/rpc-client";
 
 const cache = new LRUCache<string, CacheEntry>({
     max: 5,
 });
 
 export async function queryVfsUsername(
-    lcdUrl: string,
+    client: RpcClient | LcdClient,
     vfsAddress: string,
     address: string,
 ) {
@@ -23,9 +24,8 @@ export async function queryVfsUsername(
         cache,
         ttl: 1000 * 60 * 5, // 5 minutes
         getFreshValue: async () => {
-            const lcdClient = new LcdClient(lcdUrl);
             const username =
-                await lcdClient.queryContractSmart<VFS.GetUsernameResponse>(
+                await client.queryContractSmart<VFS.GetUsernameResponse>(
                     vfsAddress,
                     VFS.getUsernameMsg(address),
                 );
@@ -35,7 +35,7 @@ export async function queryVfsUsername(
 }
 
 export async function queryVfsResolvePath(
-    lcdUrl: string,
+    client: RpcClient | LcdClient,
     vfsAddress: string,
     path: string,
 ) {
@@ -44,9 +44,8 @@ export async function queryVfsResolvePath(
         cache,
         ttl: 1000 * 60 * 60 * 24, // 1 day
         getFreshValue: async () => {
-            const lcdClient = new LcdClient(lcdUrl);
             const resolvedPath =
-                await lcdClient.queryContractSmart<VFS.ResolvePathResponse>(
+                await client.queryContractSmart<VFS.ResolvePathResponse>(
                     vfsAddress,
                     VFS.resolvePathMsg(path),
                 );
@@ -59,6 +58,7 @@ export async function queryVfsResolvePathUsingPathOnly(
     chains: IChainConfig[],
     path: string,
     defaultConfig: IChainConfig,
+    getRpcClient?: (chainIdentifier: string) => Promise<RpcClient>,
 ) {
     // Strip the path to a raw vfs path (no protocols etc)
     const rawPath = VFS.stripPath(path);
@@ -94,15 +94,16 @@ export async function queryVfsResolvePathUsingPathOnly(
     }
 
     // Query the kernel to resolve the VFS address
+    const client = getRpcClient ? await getRpcClient(chainConfig.chainId) : new LcdClient(chainConfig.lcdUrl);
     const vfsAddress = await queryKernelKeyAddress(
-        chainConfig.lcdUrl,
+        client,
         chainConfig.kernelAddress,
         KERNEL.KernelKey.VFS,
     );
 
     // Query the VFS contract to resolve the path
     const resolvePath = await queryVfsResolvePath(
-        chainConfig.lcdUrl,
+        client,
         vfsAddress,
         rawPath,
     );

@@ -12,7 +12,14 @@ import { createTRPCReact } from "@trpc/react-query";
 import { AppRouter } from ".";
 import superJSON from "superjson";
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  },
+});
 
 // Used in server setup
 export const trpcReactClient = createTRPCReact<AppRouter>();

@@ -1,12 +1,18 @@
 import { z } from "zod";
 
 import { t } from "../trpc";
+import { RpcClient } from "@/lib/andrjs/rpc-client/client";
+import { withRpcClient } from "./withRpcClient";
+
+const cachedRpcClients: {
+  [url: string]: Promise<RpcClient>
+} = {}
 
 /**
  * Middleware to add chain config to the context.
  * Adds a required chainId to the input and adds the chain config to the context.
  */
-export const withChainConfig = t.procedure
+export const withChainConfig = withRpcClient
   .input(
     z.object({
       "chain-identifier": z.string(),

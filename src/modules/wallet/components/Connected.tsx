@@ -13,7 +13,7 @@ import {
   useAndromedaStore,
 } from "@/zustand/andromeda";
 import { ChevronDownIcon, ExternalLinkIcon, XIcon } from "lucide-react";
-
+import Image from "next/image";
 import React, { FC } from "react";
 
 interface ConnectedProps { }
@@ -32,7 +32,7 @@ const Connected: FC<ConnectedProps> = (props) => {
           variant="outline"
         >
           <div className="flex items-center">
-            <img src={config?.iconUrls?.sm ?? ""} className="w-5" alt="icon" />
+            <Image src={config?.iconUrls?.sm ?? ""} className="w-5" alt="icon" width={100} height={100} />
             <span className="text-md ml-2">{truncatedAddress}</span>
             <Badge
               className={`ml-2 text-white uppercase ${config?.chainType === "mainnet" ? "bg-green-500" : "bg-purple-500"}`}
@@ -48,7 +48,7 @@ const Connected: FC<ConnectedProps> = (props) => {
       <PopoverContent align="end">
         <div className="flex items-center mb-3">
           {config?.iconUrls?.sm && (
-            <img src={config.iconUrls.sm} className="w-5" alt="icon" />
+            <Image src={config.iconUrls.sm} className="w-5" alt="icon" width={100} height={100} />
           )}
           <span className="font-semibold flex-1 ml-2">
             {config?.chainName ?? config?.chainId}

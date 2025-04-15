@@ -18,13 +18,14 @@ export const vfsRouter = createTRPCRouter({
             }),
         )
         .query<VFS.GetUsernameResponse>(async ({ input, ctx }) => {
+            const rpcClient = await ctx.getRpcClient(input["chain-identifier"]);
             const vfsAddress = await queryKernelKeyAddress(
-                ctx.chainConfig.lcdUrl,
+                rpcClient,
                 ctx.chainConfig.kernelAddress,
                 KERNEL.KernelKey.VFS,
             );
             const username = await queryVfsUsername(
-                ctx.chainConfig.lcdUrl,
+                rpcClient,
                 vfsAddress,
                 input.address,
             );
@@ -42,6 +43,7 @@ export const vfsRouter = createTRPCRouter({
                 ctx.chainList,
                 input.path,
                 ctx.chainConfig,
+                ctx.getRpcClient,
             );
             return resolvedPath;
         }),

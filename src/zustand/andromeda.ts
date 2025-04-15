@@ -1,4 +1,5 @@
 "use client";
+import { HttpBatchClient } from "@/lib/andrjs/rpc-client";
 import { trpcStandaloneClient } from "@/lib/trpc/client";
 import createClient, {
   ChainClient,
@@ -93,7 +94,11 @@ export const connectAndromedaClient = async (chainIdentifier: string) => {
     const accounts = await signer.getAccounts();
 
     const client = createClient(config.addressPrefix);
-    await client.connect(config.chainUrl, signer as any, {
+    const batchClient = new HttpBatchClient(config.chainUrl, {
+      batchSizeLimit: 10,
+      dispatchInterval: 500,
+    });
+    await client.connect(batchClient, signer as any, {
       gasPrice: GasPrice.fromString(config.defaultFee),
     });
     localStorage.setItem(KEPLR_AUTOCONNECT_KEY, keplr?.mode ?? "extension");
