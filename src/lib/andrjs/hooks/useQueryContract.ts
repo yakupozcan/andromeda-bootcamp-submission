@@ -9,18 +9,18 @@ import { useQuery } from "@tanstack/react-query";
  * @returns The result of the query
  */
 export const useQueryContract = <R = any, M = any>(
-    queryClient: NonNullable<ChainClient["queryClient"]>,
-    contractAddress: string,
-    msg: M
+  queryClient: NonNullable<ChainClient["queryClient"]>,
+  contractAddress: string,
+  msg: M,
 ) => {
-    const result = useQuery({
-        queryKey: ["contract", contractAddress, msg],
-        queryFn: async () => {
-            const res = await queryClient
-                .queryContractSmart(contractAddress, msg)
-                .then((res) => res as Response);
-            return res;
-        },
-    });
-    return result;
+  const result = useQuery({
+    queryKey: ["contract", contractAddress, msg],
+    queryFn: async () => {
+      const res = await queryClient
+        .queryContractSmart(contractAddress, msg)
+        .then((res) => res as Response);
+      return res;
+    },
+  });
+  return result;
 };

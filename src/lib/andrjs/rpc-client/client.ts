@@ -1,9 +1,18 @@
-import { IbcExtension, QueryClient, setupIbcExtension, setupTxExtension, TxExtension } from "@cosmjs/stargate";
-import { Tendermint37Client, CometClient, RpcClient as TenderintRpcClient } from "@cosmjs/tendermint-rpc";
+import {
+  IbcExtension,
+  QueryClient,
+  setupIbcExtension,
+  setupTxExtension,
+  TxExtension,
+} from "@cosmjs/stargate";
+import {
+  Tendermint37Client,
+  CometClient,
+  RpcClient as TenderintRpcClient,
+} from "@cosmjs/tendermint-rpc";
 import { RpcClientEndpoint } from "./types";
 import { setupWasmExtension, WasmExtension } from "@cosmjs/cosmwasm-stargate";
 import { HttpBatchClient } from "./batch-client";
-
 
 /**
  * Rpc client for Andromeda.
@@ -15,7 +24,12 @@ export class RpcClient {
 
   private constructor(cometClient: CometClient) {
     this._cometClient = cometClient;
-    this._client = QueryClient.withExtensions(this._cometClient, setupTxExtension, setupWasmExtension, setupIbcExtension);
+    this._client = QueryClient.withExtensions(
+      this._cometClient,
+      setupTxExtension,
+      setupWasmExtension,
+      setupIbcExtension,
+    );
   }
 
   static async create(endpoint: RpcClientEndpoint): Promise<RpcClient> {
@@ -23,7 +37,7 @@ export class RpcClient {
     if ("url" in endpoint) {
       rpcClient = new HttpBatchClient(endpoint.url, {
         batchSizeLimit: endpoint.batch ?? 10,
-        'dispatchInterval': endpoint.batchInterval,
+        dispatchInterval: endpoint.batchInterval,
       });
     } else {
       rpcClient = endpoint.client;
@@ -53,7 +67,6 @@ export class RpcClient {
     }
     return this._cometClient;
   }
-
 
   async queryContractSmart<T, Q = unknown>(
     contractAddress: string,

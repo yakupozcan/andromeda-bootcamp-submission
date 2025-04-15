@@ -7,7 +7,7 @@ import React from "react";
 import { ConnectWallet } from "../wallet";
 import Image from "next/image";
 
-interface Props { }
+interface Props {}
 
 const LandingPage: React.FC<Props> = (props) => {
   const { connectedChain } = useAndromedaStore();
@@ -15,7 +15,13 @@ const LandingPage: React.FC<Props> = (props) => {
   return (
     <GridBackground>
       <div className="flex flex-col min-h-screen items-center justify-center gap-4">
-        <Image src="/logo.png" className="w-30" alt='logo' width={100} height={100} />
+        <Image
+          src="/logo.png"
+          className="w-30"
+          alt="logo"
+          width={100}
+          height={100}
+        />
         <p className="text-4xl font-bold">Andromeda Nextjs Starter Template</p>
         {isLoading ? (
           <p>Loading...</p>

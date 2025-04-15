@@ -5,8 +5,8 @@ import { RpcClient } from "@/lib/andrjs/rpc-client/client";
 import { withRpcClient } from "./withRpcClient";
 
 const cachedRpcClients: {
-  [url: string]: Promise<RpcClient>
-} = {}
+  [url: string]: Promise<RpcClient>;
+} = {};
 
 /**
  * Middleware to add chain config to the context.
