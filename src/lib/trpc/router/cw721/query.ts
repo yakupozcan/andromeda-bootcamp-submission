@@ -9,9 +9,10 @@ const cache = new LRUCache<string, CacheEntry>({
 });
 
 
-export async function queryCw721AllTokenIds(lcdUrl: string, vehicleAddress: string) {
+export async function queryCw721AllTokenIds(lcdUrl: string, vehicleAddress: string, limit?: CW721_TOKENS.GetAllTokensLimit) {
+    limit = CW721_TOKENS.getAllTokensLimit(limit)
     return cachified({
-        key: ["query", "cw721", "getAllTokenIds", vehicleAddress].join("-"),
+        key: ["query", "cw721", "getAllTokenIds", vehicleAddress, limit.limit].join("-"),
         cache,
         ttl: 1000 * 60 * 5, // 5 minutes
         getFreshValue: async () => {
@@ -19,7 +20,7 @@ export async function queryCw721AllTokenIds(lcdUrl: string, vehicleAddress: stri
             const allTokenIds =
                 await lcdClient.queryContractSmart<CW721_TOKENS.GetAllTokenIdResponse>(
                     vehicleAddress,
-                    CW721_TOKENS.getAllTOkenIdMsg(),
+                    CW721_TOKENS.getAllTokenIdMsg(limit),
                 );
             return allTokenIds;
         },

@@ -29,9 +29,11 @@ export async function queryAuctionLatestSaleState(lcdUrl: string, contractAddres
 
 
 
-export async function queryBids(lcdUrl: string, contractAddress: string, auction_id: string) {
+
+export async function queryBids(lcdUrl: string, contractAddress: string, auction_id: string, pagination?: AUCTION.GetBidsPagination) {
+    pagination = AUCTION.createGetBidsPagination(pagination)
     return cachified({
-        key: ["query", "auction", "getBids", contractAddress, auction_id].join("-"),
+        key: ["query", "auction", "getBids", contractAddress, auction_id, pagination.limit, pagination.start_after].join("-"),
         cache,
         ttl: 1000 * 60 * 5, // 5 minutes
         getFreshValue: async () => {
@@ -39,7 +41,7 @@ export async function queryBids(lcdUrl: string, contractAddress: string, auction
             const bidsInfo =
                 await lcdClient.queryContractSmart<AUCTION.GetBidsResponse>(
                     contractAddress,
-                    AUCTION.getBids(auction_id)
+                    AUCTION.getBids(auction_id, pagination)
                 );
             return bidsInfo;
         },

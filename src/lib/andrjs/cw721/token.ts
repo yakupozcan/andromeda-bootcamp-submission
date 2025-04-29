@@ -1,20 +1,32 @@
 export namespace CW721_TOKENS {
 
-    export const getAllTOkenIdMsg = () => {
+    export interface GetAllTokensLimit {
+        limit: number
+    }
+
+    export function getAllTokensLimit(value?: GetAllTokensLimit): GetAllTokensLimit {
         return {
-            all_tokens: { limit: 5 }
+            limit: value?.limit ?? 5
+        }
+    }
+
+    export const getAllTokenIdMsg = (limitValue: GetAllTokensLimit) => {
+        return {
+            all_tokens: {
+                limit: limitValue.limit
+            }
         };
     };
 
     export type GetAllTokenIdResponse = { tokens: string[] };
 
 
-    export const getTokenInfoMsg =(tokenId :string)=>{
+    export const getTokenInfoMsg = (tokenId: string) => {
         return {
             nft_info: { token_id: tokenId }
         };
     };
 
-    export type GetTokenInfoResponse = {token_uri :string, extension:string[]}
+    export type GetTokenInfoResponse = { token_uri: string, extension: unknown }
 }
 

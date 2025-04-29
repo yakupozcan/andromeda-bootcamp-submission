@@ -7,15 +7,7 @@ export const useGetSaleInfo = (chain: string, exchangeAddress: string, denom: st
         "chain-identifier": chain,
         "contract-address": exchangeAddress,
         denom: denom
-
     }, { enabled: !!chain && !!exchangeAddress && !!denom })
-
-    if (isLoading) {
-        console.log("Fetching data for cw20 on exchange")
-    }
-    if (isError) {
-        console.log("Error fetching data : ", isError)
-    }
 
     return { saleInfo, isLoading, isError }
 };

@@ -25,16 +25,17 @@ export async function queryCw20TotalTokenSupply(lcdUrl: string, sharesAddress: s
     });
 }
 
-export async function queryAllAccounts(lcdUrl: string, sharesAddress: string) {
+export async function queryAllAccounts(lcdUrl: string, sharesAddress: string, limit?: CW20_TOKENS.GetAllAccountsLimit) {
+    limit = CW20_TOKENS.getAllCountsLimit(limit)
     return cachified({
-        key: ["query", "cw20", "getAllAccounts", sharesAddress].join("-"),
+        key: ["query", "cw20", "getAllAccounts", sharesAddress, limit.limit].join("-"),
         cache,
         ttl: 1000 * 60 * 5,      //5 minutes
         getFreshValue: async () => {
             const lcdClient = new LcdClient(lcdUrl);
             const allAccounts = await lcdClient.queryContractSmart<CW20_TOKENS.GetAllAccountsResponse>(
                 sharesAddress,
-                CW20_TOKENS.getAllAccounts(),
+                CW20_TOKENS.getAllAccounts(limit),
             )
             return allAccounts;
         }

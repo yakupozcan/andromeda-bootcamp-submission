@@ -8,10 +8,19 @@ export namespace CW20_TOKENS {
 
     export type GetTotalSupplyResponse = { total_supply: number, decimals: number };
 
-    export const getAllAccounts = () => {
+    export interface GetAllAccountsLimit {
+        limit: number
+    }
+
+    export function getAllCountsLimit(value?: GetAllAccountsLimit): GetAllAccountsLimit {
+        return {
+            limit: value?.limit ?? 25
+        }
+    }
+    export const getAllAccounts = (limitValue: GetAllAccountsLimit) => {
         return {
             all_accounts: {
-                limit: 25
+                limit: limitValue.limit
             }
         };
     };

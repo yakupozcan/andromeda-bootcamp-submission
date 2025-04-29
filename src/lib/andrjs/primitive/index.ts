@@ -15,11 +15,10 @@ export namespace PRIMITIVE {
             }
         }
     }
-    export type AppreciationRateResponse = { value: { decimal: string } }
-    export type AuctionDateResponse = { value: { string: string } }
-    export type EstimatedValueResponse = { value: { uint128: string } }
-    export type DescriptionResponse = { value: { string: string } }
-    export type GetValueResponse = { key: string, value: AppreciationRateResponse | AuctionDateResponse | EstimatedValueResponse | DescriptionResponse }
+    export type DecimalResponse = { value: { decimal: string } }
+    export type StringResponse = { value: { string: string } }
+    export type UintResponse = { value: { uint128: string } }
+    export type GetValueResponse = { key: string, value: DecimalResponse | StringResponse | UintResponse}
 
 
     export const isStringValueResponse = (value: GetValueResponse['value']) => {

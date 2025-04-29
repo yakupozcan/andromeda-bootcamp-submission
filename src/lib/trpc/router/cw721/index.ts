@@ -8,11 +8,12 @@ import { UriDataType } from "./types";
 
 export const cw721Router = createTRPCRouter({
     getAllTokenId: withContractAddress
-        .input(z.object({}))
-        .query<CW721_TOKENS.GetAllTokenIdResponse>(async ({ ctx }) => {
+        .input(z.object({ limit: z.custom<CW721_TOKENS.GetAllTokensLimit>().optional() }))
+        .query<CW721_TOKENS.GetAllTokenIdResponse>(async ({ input, ctx }) => {
             const tokenIds = await queryCw721AllTokenIds(
                 ctx.chainConfig.lcdUrl,
                 ctx.resolvedContractAddress,
+                input.limit
             )
             return tokenIds
         }),

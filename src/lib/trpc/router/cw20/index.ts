@@ -16,11 +16,12 @@ export const cw20Router = createTRPCRouter({
         }),
 
     getAllAccounts: withContractAddress
-        .input(z.object({}))
-        .query<CW20_TOKENS.GetAllAccountsResponse>(async ({ ctx }) => {
+        .input(z.object({ limit: z.custom<CW20_TOKENS.GetAllAccountsLimit>().optional() }))
+        .query<CW20_TOKENS.GetAllAccountsResponse>(async ({ input, ctx }) => {
             const allAccounts = await queryAllAccounts(
                 ctx.chainConfig.lcdUrl,
-                ctx.resolvedContractAddress
+                ctx.resolvedContractAddress,
+                input.limit
             )
             return allAccounts
         }),

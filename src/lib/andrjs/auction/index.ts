@@ -1,5 +1,4 @@
 import { Uint128 } from "@andromedaprotocol/andromeda.js/dist/api/codegen/AdodbContractTs.types";
-import { number, string } from "zod";
 
 export namespace AUCTION {
 
@@ -25,18 +24,28 @@ export namespace AUCTION {
         min_bid: Uint128,
         min_raise: Uint128,
         owner: string,
-        recipient: string
+        recipient: string,
         is_cancelled: boolean,
-        claimed: boolean,
     };
 
+    export interface GetBidsPagination {
+        start_after?: number,
+        limit: number
+    }
 
-    export const getBids = (auctionId: string) => {
+    export function createGetBidsPagination(partial?: Partial<GetBidsPagination>): GetBidsPagination {
+        return {
+            start_after: partial?.start_after,
+            limit: partial?.limit ?? 25
+        }
+    }
+
+    export const getBids = (auctionId: string, pagination: GetBidsPagination) => {
         return {
             bids: {
                 auction_id: auctionId,
-                start_after: 700,
-                limit: 25
+                start_after: pagination.start_after,
+                limit: pagination.limit
             }
         }
     }

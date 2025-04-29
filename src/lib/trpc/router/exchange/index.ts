@@ -7,14 +7,12 @@ import { querySaleInfo } from "./query";
 export const exchangeRouter = createTRPCRouter({
     getSaleInfo: withContractAddress
         .input(z.object({ denom: z.string() }))
-        .query<NonNullable<EXCHANGE.GetSaleResponse['sale']>>(async ({ ctx, input }) => {
+        .query<EXCHANGE.GetSaleResponse['sale']>(async ({ ctx, input }) => {
             const saleInfo = await querySaleInfo(
                 ctx.chainConfig.lcdUrl,
                 ctx.resolvedContractAddress,
                 input.denom
             );
-            return saleInfo.sale!
+            return saleInfo.sale
         }),
-
-
 })

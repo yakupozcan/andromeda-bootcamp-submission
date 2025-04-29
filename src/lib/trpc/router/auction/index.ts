@@ -4,6 +4,8 @@ import { createTRPCRouter } from "../../trpc";
 import z from "zod"
 import { queryAuctionLatestSaleState, queryBids } from "./query";
 
+
+
 export const auctionRouter = createTRPCRouter({
     getLatestAuctionState: withContractAddress
         .input(z.object({ tokenAddress: z.string(), tokenId: z.string() }))
@@ -18,12 +20,13 @@ export const auctionRouter = createTRPCRouter({
         }),
 
     getBids: withContractAddress
-        .input(z.object({ auctionId: z.string() }))
+        .input(z.object({ auctionId: z.string(), pagination : z.custom<AUCTION.GetBidsPagination>().optional()}))
         .query<AUCTION.GetBidsResponse>(async ({ input, ctx }) => {
             const bids = await queryBids(
                 ctx.chainConfig.lcdUrl,
                 ctx.resolvedContractAddress,
-                input.auctionId
+                input.auctionId,
+                input.pagination,
             )
             return bids
         })
