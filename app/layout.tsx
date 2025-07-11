@@ -3,12 +3,14 @@ import "@/styles/globals.css";
 import Providers from "./providers";
 import { Metadata } from "next";
 import PoweredByLogo from "@/modules/ui/PoweredByLogo";
+import Header from "@/components/Header";
 
 export const metadata: Metadata = {
   title: {
-    default: "Andromeda Nextjs Starter",
-    template: "%s | App Name",
+    default: "Community Vault",
+    template: "%s | Community Vault",
   },
+  description: "A decentralized, community-governed reward platform.",
 };
 
 interface Props {
@@ -22,6 +24,7 @@ const RootLayout = async (props: Props) => {
     <html lang="en">
       <body className="dark">
         <Providers>
+          <Header />
           {children}
           <PoweredByLogo />
         </Providers>
