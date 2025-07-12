@@ -1,84 +1,115 @@
 import React from "react";
+import Link from "next/link";
+import { Post } from "@/lib/mock-data";
 
-// ------------------- Types -------------------
-export type Reaction = {
-  emoji: string;
-  count: number;
+// ------------------- Helpers -------------------
+
+const formatDate = (date: Date): string => {
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+
+  if (diffDays < 1) {
+    return `${diffHours}h ago`;
+  }
+  if (diffDays < 7) {
+    return `${diffDays}d ago`;
+  }
+  return date.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 };
 
-export type Post = {
-  id: string;
-  title: string;
-  content: string;
-  authorUsername: string;
-  authorPFP: string;
-  imageUrl: string;
-  totalTips: number;
-  reactions: Reaction[];
-};
+type Aggregated = { totalTips: number; topEmojis: { emoji: string; count: number }[] };
 
-// Static placeholder reactions (until backend hooks up)
-const PLACEHOLDER_REACTIONS: Reaction[] = [
-  { emoji: "❤️", count: 6 },
-  { emoji: "👍", count: 3 },
-];
+const aggregateReactions = (comments: Post["comments"]): Aggregated => {
+  const emojiCounts: Record<string, number> = {};
+  let totalTips = 0;
+
+  comments.forEach((c) => {
+    totalTips += c.tipAmount;
+
+    const uniqueEmojis = new Set(c.emojis);
+    uniqueEmojis.forEach((emoji) => {
+      emojiCounts[emoji] = (emojiCounts[emoji] || 0) + 1;
+    });
+  });
+
+  const topEmojis = Object.entries(emojiCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 7)
+    .map(([emoji, count]) => ({ emoji, count }));
+
+  return { totalTips, topEmojis };
+};
 
 // ------------------- Component -------------------
+
 interface PostCardProps {
   post: Post;
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
-  const { title, content, authorUsername, authorPFP, imageUrl, totalTips } = post;
+  const { title, content, authorUsername, authorPFP, imageUrl, timestamp, comments } = post;
+
+  const { totalTips, topEmojis } = aggregateReactions(comments);
+  const formattedDate = formatDate(new Date(timestamp));
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-lg bg-gray-800 shadow-lg">
-      {/* Section 1: Image */}
-      <img src={imageUrl} alt={title} className="h-56 w-full object-cover" />
+    <Link
+      href={`/post/${post.id}`}
+      className="relative flex flex-col overflow-hidden rounded-lg bg-gray-800 shadow-lg transition hover:ring-2 hover:ring-indigo-500"
+    >
+      {/* Vertical separator bar on the left */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-5 bg-gray-700/60"></div>
 
-      {/* Section 2: Header */}
-      <div className="flex items-center justify-between bg-gray-900 px-4 py-3 text-sm">
-        <div className="flex items-center gap-2">
+      <div className="grid grid-cols-3 items-center border-b border-gray-700 bg-gray-800 pl-6 pr-4 py-2 text-sm">
+        {/* Username */}
+        <span className="text-left font-medium text-gray-200">@{authorUsername}</span>
+
+        {/* PFP */}
+        <div className="flex justify-center">
           <img
             src={authorPFP}
-            alt="author PFP"
-            className="h-8 w-8 rounded-full object-cover"
+            alt="pfp"
+            className="h-14 w-14 rounded-full object-cover"
           />
-          <span className="font-medium text-gray-200">@{authorUsername}</span>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-indigo-400 font-semibold">
-            {totalTips} ANDR
-          </span>
-          <button className="rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400/50">
-            Reward
-          </button>
-        </div>
+
+        {/* Timestamp */}
+        <span className="text-right text-gray-400">{formattedDate}</span>
       </div>
+
+      {/* Image */}
+      <img src={imageUrl} alt={title} className="h-56 w-full object-cover" />
 
       {/* Section 3: Body */}
-      <div className="flex flex-col gap-2 px-4 py-4 text-left">
-        <h2 className="text-lg font-bold text-white">{title}</h2>
-        <p className="text-gray-300 line-clamp-4 text-sm">{content}</p>
+      <div className="flex flex-col gap-2 pl-6 pr-4 py-4 text-left">
+        <h2 className="text-lg font-bold text-white line-clamp-2">{title}</h2>
+        <p className="text-gray-300 line-clamp-3 text-sm">{content}</p>
       </div>
 
-      {/* Section 4: Footer / Reactions */}
-      <div className="flex items-center justify-between border-t border-gray-700 px-4 py-2 text-sm">
+      {/* Section 4: Footer */}
+      <div className="flex items-center justify-between border-t border-gray-700 pl-6 pr-4 py-2 text-sm">
         <button className="rounded-md px-3 py-1 text-gray-300 hover:bg-gray-700 hover:text-white focus:outline-none">
           Comments
         </button>
-        <div className="flex items-center gap-2">
-          {PLACEHOLDER_REACTIONS.map((r) => (
+        <div className="flex items-center gap-3">
+          <span className="text-indigo-400 font-semibold text-xs">{totalTips} ANDR</span>
+          {topEmojis.map((r) => (
             <span
               key={r.emoji}
-              className="flex items-center gap-1 rounded-md bg-gray-700 px-2 py-0.5 text-gray-200"
+              className="flex items-center gap-1 rounded-md bg-gray-700 px-2 py-0.5 text-gray-200 text-xs"
             >
               {r.emoji} {r.count}
             </span>
           ))}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

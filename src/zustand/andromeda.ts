@@ -34,7 +34,7 @@ export interface IAndromedaStore {
 
 export const useAndromedaStore = create<IAndromedaStore>((set, get) => ({
   client: undefined,
-  connectedChain: process.env.NEXT_PUBLIC_CHAIN_IDENTIFIER,
+  connectedChain: "constantine-3",
   isConnected: false,
   keplr: undefined,
   accounts: [],

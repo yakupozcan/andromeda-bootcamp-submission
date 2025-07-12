@@ -30,9 +30,7 @@ const Providers: FC<Props> = (props) => {
       autoconnect === keplr?.mode
     ) {
       if (!isInitialized) {
-        connectAndromedaClient(
-          process.env.NEXT_PUBLIC_CHAIN_IDENTIFIER || "",
-        ).catch((err) => {
+        connectAndromedaClient("constantine-3").catch((err) => {
           console.error(err);
         });
       }

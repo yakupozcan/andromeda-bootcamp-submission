@@ -23,7 +23,7 @@ const Header: React.FC = () => {
 
   const connect = () => {
     if (isConnecting) return;
-    connectAndromedaClient(process.env.NEXT_PUBLIC_CHAIN_IDENTIFIER || "");
+    connectAndromedaClient("constantine-3");
   };
 
   const disconnect = () => {

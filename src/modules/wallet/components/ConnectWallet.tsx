@@ -17,7 +17,7 @@ const ConnectWallet: FC<ConnectWalletProps> = (props) => {
   return (
     <Button
       onClick={() =>
-        connectAndromedaClient(process.env.NEXT_PUBLIC_CHAIN_IDENTIFIER || "")
+        connectAndromedaClient("constantine-3")
       }
       disabled={isLoading}
     >
