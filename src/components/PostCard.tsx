@@ -23,28 +23,7 @@ const formatDate = (date: Date): string => {
   });
 };
 
-type Aggregated = { totalTips: number; topEmojis: { emoji: string; count: number }[] };
-
-const aggregateReactions = (comments: Post["comments"]): Aggregated => {
-  const emojiCounts: Record<string, number> = {};
-  let totalTips = 0;
-
-  comments.forEach((c) => {
-    totalTips += c.tipAmount;
-
-    const uniqueEmojis = new Set(c.emojis);
-    uniqueEmojis.forEach((emoji) => {
-      emojiCounts[emoji] = (emojiCounts[emoji] || 0) + 1;
-    });
-  });
-
-  const topEmojis = Object.entries(emojiCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 7)
-    .map(([emoji, count]) => ({ emoji, count }));
-
-  return { totalTips, topEmojis };
-};
+// No aggregation needed; data now pre-computed in mock data.
 
 // ------------------- Component -------------------
 
@@ -53,9 +32,7 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
-  const { title, content, authorUsername, authorPFP, imageUrl, timestamp, comments } = post;
-
-  const { totalTips, topEmojis } = aggregateReactions(comments);
+  const { title, content, authorUsername, authorPFP, imageUrl, timestamp, totalTips, reactions } = post;
   const formattedDate = formatDate(new Date(timestamp));
 
   return (
@@ -99,7 +76,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         </button>
         <div className="flex items-center gap-3">
           <span className="text-indigo-400 font-semibold text-xs">{totalTips} ANDR</span>
-          {topEmojis.map((r) => (
+          {reactions.slice(0,7).map((r) => (
             <span
               key={r.emoji}
               className="flex items-center gap-1 rounded-md bg-gray-700 px-2 py-0.5 text-gray-200 text-xs"

@@ -8,6 +8,7 @@ export type Comment = {
   text: string; // may be empty if only tip / emojis
   emojis: string[];
   tipAmount: number; // 0 when no tip
+  timestamp: Date;
 };
 
 export type Post = {
@@ -19,6 +20,8 @@ export type Post = {
   content: string;
   imageUrl: string;
   comments: Comment[];
+  totalTips: number;
+  reactions: { emoji: string; count: number }[];
 };
 
 // Helper to build relative dates
@@ -44,6 +47,7 @@ export const generateMockPosts = (): Post[] => {
           text: "Great initiative!",
           emojis: [],
           tipAmount: 0,
+          timestamp: hoursAgo(2),
         },
         {
           id: "c1-2",
@@ -52,6 +56,7 @@ export const generateMockPosts = (): Post[] => {
           text: "",
           emojis: ["🚀", "🔥"],
           tipAmount: 0,
+          timestamp: hoursAgo(1.5),
         },
         {
           id: "c1-3",
@@ -60,6 +65,7 @@ export const generateMockPosts = (): Post[] => {
           text: "",
           emojis: [],
           tipAmount: 25,
+          timestamp: hoursAgo(1),
         },
         {
           id: "c1-4",
@@ -68,6 +74,7 @@ export const generateMockPosts = (): Post[] => {
           text: "Love this ❤️",
           emojis: ["❤️"],
           tipAmount: 10,
+          timestamp: hoursAgo(0.5),
         },
       ],
     },
@@ -87,6 +94,7 @@ export const generateMockPosts = (): Post[] => {
           text: "Looks amazing!",
           emojis: ["😍"],
           tipAmount: 0,
+          timestamp: hoursAgo(10),
         },
         {
           id: "c2-2",
@@ -95,6 +103,7 @@ export const generateMockPosts = (): Post[] => {
           text: "",
           emojis: ["👏"],
           tipAmount: 5,
+          timestamp: hoursAgo(8),
         },
       ],
     },
@@ -114,6 +123,7 @@ export const generateMockPosts = (): Post[] => {
           text: "Interesting perspective 🤔",
           emojis: ["🤔"],
           tipAmount: 0,
+          timestamp: daysAgo(4.5),
         },
       ],
     },
@@ -133,6 +143,7 @@ export const generateMockPosts = (): Post[] => {
           text: "I'm in! 🚀",
           emojis: ["🚀"],
           tipAmount: 0,
+          timestamp: daysAgo(9),
         },
         {
           id: "c4-2",
@@ -141,6 +152,7 @@ export const generateMockPosts = (): Post[] => {
           text: "",
           emojis: [],
           tipAmount: 100,
+          timestamp: daysAgo(8.5),
         },
       ],
     },
@@ -160,6 +172,7 @@ export const generateMockPosts = (): Post[] => {
           text: "Here's a tip for your great work!",
           emojis: [],
           tipAmount: 50,
+          timestamp: daysAgo(18),
         },
         {
           id: "c5-2",
@@ -168,6 +181,7 @@ export const generateMockPosts = (): Post[] => {
           text: "",
           emojis: ["😂"],
           tipAmount: 0,
+          timestamp: daysAgo(17.5),
         },
         {
           id: "c5-3",
@@ -176,10 +190,32 @@ export const generateMockPosts = (): Post[] => {
           text: "Great insights 🔥",
           emojis: ["🔥"],
           tipAmount: 0,
+          timestamp: daysAgo(17),
         },
       ],
     },
   ];
 
-  return posts;
+  // Aggregate totalTips and reactions for each post
+  return posts.map((p) => {
+    let totalTips = 0;
+    const emojiCounts: Record<string, number> = {};
+
+    p.comments.forEach((c) => {
+      totalTips += c.tipAmount;
+      new Set(c.emojis).forEach((emoji) => {
+        emojiCounts[emoji] = (emojiCounts[emoji] || 0) + 1;
+      });
+    });
+
+    const reactions = Object.entries(emojiCounts)
+      .sort((a, b) => b[1] - a[1])
+      .map(([emoji, count]) => ({ emoji, count }));
+
+    return {
+      ...p,
+      totalTips,
+      reactions,
+    };
+  });
 };

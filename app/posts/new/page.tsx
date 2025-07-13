@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useStore } from "@/lib/store";
 import useAndromedaClient from "@/lib/andrjs/hooks/useAndromedaClient";
 import { useAndromedaStore } from "@/zustand/andromeda";
 import { executeContract } from "@/lib/andrjs/functions";
@@ -12,6 +14,9 @@ export default function NewPostPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState("");
+
+  const addPost = useStore((s) => s.addPost);
+  const router = useRouter();
 
   // Andromeda wallet context
   const client = useAndromedaClient();
@@ -96,31 +101,26 @@ export default function NewPostPage() {
     setStatus("Uploading image to IPFS...");
 
     try {
-      let imageCid: string | null = null;
+      let imageUrl = "https://picsum.photos/seed/default/600/400";
+
       if (imageFile) {
-        imageCid = await uploadToPinata(imageFile);
+        setStatus("Uploading image...");
+        const imageCid = await uploadToPinata(imageFile);
+        if (imageCid) {
+          imageUrl = `https://gateway.pinata.cloud/ipfs/${imageCid}`;
+        }
       }
 
-      setStatus("Uploading metadata...");
-
-      let metadataCid: string | null = null;
-      if (imageCid) {
-        metadataCid = await uploadMetadataToPinata(title, content, imageCid);
-      }
-
-      if (!metadataCid) throw new Error("Metadata upload failed");
-
-      setStatus("Awaiting transaction approval...");
-      await mintNFT(metadataCid);
-
-      setStatus("Post successfully created as an NFT!");
-
-      console.log("Form submitted", {
+      // Add post to global store
+      addPost({
         title,
         content,
-        imageCid,
-        metadataCid,
-      });
+        imageUrl,
+        authorUsername: "Guest",
+        authorPFP: "https://picsum.photos/seed/guestpfp/100/100",
+      } as any);
+
+      router.push("/");
 
       // TODO: Redirect to homepage or post list
     } catch (err) {

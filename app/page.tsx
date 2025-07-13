@@ -1,11 +1,14 @@
+"use client";
+
+// Client-side homepage to enable Zustand store usage
+
 import React from "react";
 import Link from "next/link";
 import PostCard from "@/components/PostCard";
-import { generateMockPosts } from "@/lib/mock-data";
+import { useStore } from "@/lib/store";
 
 export default function Home() {
-  // Mock data – replace with real data when backend is ready
-  const mockPosts = generateMockPosts();
+  const posts = useStore((state) => state.posts);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-start bg-gray-900 px-4 py-20 text-center text-white">
@@ -25,7 +28,7 @@ export default function Home() {
 
       {/* Posts list */}
       <section className="mt-16 flex w-full max-w-2xl flex-col items-center gap-8">
-        {mockPosts.map((post) => (
+        {posts.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
       </section>

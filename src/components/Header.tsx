@@ -23,7 +23,7 @@ const Header: React.FC = () => {
 
   const connect = () => {
     if (isConnecting) return;
-    connectAndromedaClient("constantine-3");
+    connectAndromedaClient("galileo-4");
   };
 
   const disconnect = () => {
@@ -42,6 +42,14 @@ const Header: React.FC = () => {
       </Link>
 
       {/* Wallet action area */}
+      <div className="flex items-center gap-4">
+        <Link
+          href="/posts/new"
+          className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400/50"
+        >
+          Create New Post
+        </Link>
+
       {walletAddress ? (
         <div className="flex items-center gap-3">
           <span className="text-sm text-gray-300">
@@ -63,6 +71,7 @@ const Header: React.FC = () => {
           {isConnecting ? "Connecting..." : "Connect Wallet"}
         </button>
       )}
+      </div>
     </header>
   );
 };
