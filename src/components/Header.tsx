@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   connectAndromedaClient,
@@ -8,18 +8,34 @@ import {
   useAndromedaStore,
 } from "@/zustand/andromeda";
 
-/**
- * Reusable site header with a wallet connect / disconnect UI.
- * Assumes a custom `useAndromeda` hook that exposes:
- *  - walletAddress: string | null
- *  - connect: () => Promise<void>
- *  - disconnect: () => Promise<void>
- */
-const Header: React.FC = () => {
+export default function Header() {
+  // Wallet state
   const walletAddress = useAndromedaStore(
     (state) => state.accounts[0]?.address ?? null,
   );
   const isConnecting = useAndromedaStore((state) => state.isLoading);
+
+  // User profile state
+  const [showProfile, setShowProfile] = useState(false);
+  const [username, setUsername] = useState("");
+  const [pfp, setPfp] = useState("");
+
+  // Load from localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setUsername(localStorage.getItem("username") || "");
+      setPfp(localStorage.getItem("pfp") || "");
+    }
+  }, []);
+
+  // Save to localStorage
+  const handleSave = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("username", username);
+      localStorage.setItem("pfp", pfp);
+    }
+    setShowProfile(false);
+  };
 
   const connect = () => {
     if (isConnecting) return;
@@ -34,46 +50,129 @@ const Header: React.FC = () => {
     `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 
   return (
-    <header className="sticky top-0 z-50 flex w-full items-center justify-between bg-gray-900/90 px-6 py-3 backdrop-blur border-b border-gray-700">
-      {/* Site title or logo placeholder */}
-      <Link href="/" className="flex items-center gap-2 text-white hover:text-indigo-400">
-        <span className="text-2xl">🪙</span>
-        <span className="text-lg font-semibold">Community Vault</span>
-      </Link>
-
-      {/* Wallet action area */}
-      <div className="flex items-center gap-4">
+    <header style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      zIndex: 1000,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: 16,
+      background: '#222',
+      color: '#fff',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+    }}>
+      {/* Sol: Logo ve Proje İsmi */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <img src="/favicon-32x32.png" alt="Gold Coin Logo" style={{ width: 36, height: 36, objectFit: 'contain' }} />
+        <Link href="/" style={{ fontWeight: 'bold', fontSize: 20, color: '#fff', textDecoration: 'none' }}>
+          Community Vault
+        </Link>
+      </div>
+      {/* Sağ: Diğer Bileşenler */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <Link
           href="/posts/new"
-          className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400/50"
+          style={{
+            background: '#6366f1',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 4,
+            padding: '8px 16px',
+            textDecoration: 'none',
+            fontWeight: 500
+          }}
         >
           Create New Post
         </Link>
-
-      {walletAddress ? (
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-300">
-            {truncateAddress(walletAddress)}
-          </span>
+        {walletAddress ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 14, color: '#ddd' }}>
+              {truncateAddress(walletAddress)}
+            </span>
+            <button
+              onClick={disconnect}
+              style={{
+                background: '#dc2626',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 4,
+                padding: '6px 12px',
+                fontWeight: 500
+              }}
+            >
+              Disconnect
+            </button>
+          </div>
+        ) : (
           <button
-            onClick={disconnect}
-            className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400/50"
+            onClick={connect}
+            disabled={isConnecting}
+            style={{
+              background: '#6366f1',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 4,
+              padding: '6px 12px',
+              opacity: isConnecting ? 0.6 : 1,
+              cursor: isConnecting ? 'not-allowed' : 'pointer',
+              fontWeight: 500
+            }}
           >
-            Disconnect
+            {isConnecting ? "Connecting..." : "Connect Wallet"}
           </button>
-        </div>
-      ) : (
+        )}
         <button
-          onClick={connect}
-          disabled={isConnecting}
-          className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400/50 disabled:cursor-not-allowed disabled:opacity-60"
+          onClick={() => setShowProfile((v) => !v)}
+          style={{
+            background: '#fff',
+            color: '#444',
+            border: 'none',
+            borderRadius: '50%',
+            width: 36,
+            height: 36,
+            fontSize: 18,
+            cursor: 'pointer'
+          }}
+          title="User Profile"
         >
-          {isConnecting ? "Connecting..." : "Connect Wallet"}
+          <span role="img" aria-label="user">👤</span>
         </button>
-      )}
+        {showProfile && (
+          <div style={{
+            position: 'absolute',
+            right: 20,
+            top: 60,
+            background: '#fff',
+            color: '#222',
+            borderRadius: 8,
+            padding: 16,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+            zIndex: 100
+          }}>
+            <input
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              placeholder="Username"
+              style={{ display: 'block', marginBottom: 8, width: '100%' }}
+            />
+            <input
+              value={pfp}
+              onChange={e => setPfp(e.target.value)}
+              placeholder="Profile Pic URL"
+              style={{ display: 'block', marginBottom: 8, width: '100%' }}
+            />
+            <button
+              onClick={handleSave}
+              style={{ background: '#444', color: '#fff', border: 'none', borderRadius: 4, padding: '6px 12px' }}
+            >
+              Save
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );
-};
-
-export default Header;
+}

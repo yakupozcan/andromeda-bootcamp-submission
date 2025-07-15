@@ -115,7 +115,11 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @@apply text-foreground;
+    background-image: linear-gradient(rgba(10, 10, 20, 0.6), rgba(10, 10, 20, 0.6)), url('/bg-main.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
   }
   button {
     @apply cursor-pointer;

@@ -43,7 +43,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       {/* Vertical separator bar on the left */}
       <div className="pointer-events-none absolute inset-y-0 left-0 w-5 bg-gray-700/60"></div>
 
-      <div className="grid grid-cols-3 items-center border-b border-gray-700 bg-gray-800 pl-6 pr-4 py-2 text-sm">
+      <div className="grid grid-cols-3 items-center border-b border-gray-700 bg-gray-800 pl-6 pr-4 py-2 text-sm sticky top-0 z-10" style={{ position: 'sticky', top: 0, zIndex: 10, background: '#2d3748' }}>
         {/* Username */}
         <span className="text-left font-medium text-gray-200">@{authorUsername}</span>
 
@@ -61,7 +61,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       </div>
 
       {/* Image */}
-      <img src={imageUrl} alt={title} className="h-56 w-full object-cover" />
+      <img src={imageUrl} alt={title} className="max-h-96 w-full object-contain bg-black" style={{ background: '#000' }} />
 
       {/* Section 3: Body */}
       <div className="flex flex-col gap-2 pl-6 pr-4 py-4 text-left">

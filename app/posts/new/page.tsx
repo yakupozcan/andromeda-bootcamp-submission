@@ -65,10 +65,17 @@ export default function NewPostPage() {
       return null;
     }
 
+    // Kullanıcı adı ve profil fotoğrafını localStorage'dan al
+    const userName = typeof window !== "undefined" ? localStorage.getItem("username") || "Unknown" : "Unknown";
+    const userPFP = typeof window !== "undefined" ? localStorage.getItem("pfp") || "https://picsum.photos/seed/guestpfp/100/100" : "https://picsum.photos/seed/guestpfp/100/100";
+
     const metadata = {
       name: title,
       description: content,
       image: `https://gateway.pinata.cloud/ipfs/${imageCid}`,
+      author: userName,
+      authorPFP: userPFP,
+      timestamp: new Date().toISOString(),
     };
 
     try {
@@ -102,27 +109,29 @@ export default function NewPostPage() {
 
     try {
       let imageUrl = "https://picsum.photos/seed/default/600/400";
-
+      let imageCid = "";
       if (imageFile) {
         setStatus("Uploading image...");
-        const imageCid = await uploadToPinata(imageFile);
+        const uploadedCid = await uploadToPinata(imageFile);
+        imageCid = uploadedCid ? uploadedCid : "";
         if (imageCid) {
           imageUrl = `https://gateway.pinata.cloud/ipfs/${imageCid}`;
         }
       }
 
-      // Add post to global store
-      addPost({
+      setStatus("Uploading metadata to IPFS...");
+      // Metadata'ya author ve timestamp ekle
+      const metadataCid = await uploadMetadataToPinata(
         title,
         content,
-        imageUrl,
-        authorUsername: "Guest",
-        authorPFP: "https://picsum.photos/seed/guestpfp/100/100",
-      } as any);
+        imageCid
+      );
+      if (!metadataCid) throw new Error("Metadata IPFS yüklenemedi");
 
+      setStatus("Minting NFT on blockchain...");
+      await mintNFT(metadataCid);
+      setStatus("Success! Redirecting...");
       router.push("/");
-
-      // TODO: Redirect to homepage or post list
     } catch (err) {
       console.error(err);
       setStatus("An error occurred. Please try again.");
@@ -133,12 +142,13 @@ export default function NewPostPage() {
 
   // Mint the NFT of the post using metadata CID
   const mintNFT = async (metadataCid: string) => {
-    const NFT_CONTRACT_ADDRESS = "andr1..."; // TODO: Replace with actual address
+    const NFT_CONTRACT_ADDRESS = "andr1d9lez0z6jhf00dxhcgyg7hlvru89gupjs3h6xlcp9qdpvhpqm7cqmm7nld";
     const mintMsg = {
       mint: {
         token_id: `post-${Date.now()}`,
         owner: walletAddress,
         token_uri: `ipfs://${metadataCid}`,
+        extension: { publisher: walletAddress },
       },
     };
 
