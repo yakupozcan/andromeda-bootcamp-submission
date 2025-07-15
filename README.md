@@ -1,61 +1,66 @@
-<p>&nbsp;</p>
-<p align="center">
-<img src="https://github.com/andromedaprotocol/andromeda-nextjs-application-starter/blob/main/public/Andromeda-Logo.png" width=1000>
-</p>
+# ⭐ Community Vault
 
-# About
+**[▶️ Live Demo on Vercel](https://andromeda-bootcamp-submission.vercel.app/)**
 
-The Andromeda Next.js Application Starter is a base setup for developers to start building without having to worry about the prerequisites. Containing all the key parts needed, it allows you to set up in minutes and start working on your builds. The starter contains the following setups:
+---
 
-- Keplr integration
-- Andromeda Client (Devnet)
-- GraphQL integration
-- Contract execution hooks
+### ⭐ Project Description
 
-Using this as a starting template, any developer can create their own nextjs application with custom embeddables that suit their needs.
+Community Vault is a decentralized social platform built on the Andromeda Testnet. It reimagines a social feed where content is truly owned by its creator. Each post, complete with an image and text, is minted as a unique NFT on the blockchain, creating a permanent and uncensorable record. This project serves as a proof-of-concept for a new generation of community-governed applications.
 
-**Notes**:
+### ⭐ Project Vision
 
-- It mainly uses Chakra UI, but developers can install any styling library, such as Tailwind, for example.
-- This setup is currently using our Devnet (Testnet for Devs). If you encounter any issues connecting to the GraphQL or chain, please contact us for support.
+The long-term vision for the Community Vault is to evolve into a fully-fledged Decentralized Autonomous Organization (DAO). The goal is to create a self-sustaining ecosystem where the community not only creates the content but also governs the platform. Future versions will empower users to vote on proposals, manage a collective treasury funded by on-chain rewards, and truly own the platform they help build. This project aims to be a foundation for a more transparent, fair, and collaborative digital society.
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+### ⭐ Key Features
 
-## Getting Started
+-   **NFT as Content:** Create posts with a title, content, and an image, which are then minted as a CW721 NFT on the Andromeda Testnet.
+-   **On-Chain Data:** The main feed fetches and displays all post-NFTs directly from our custom smart contract.
+-   **Decentralized Storage:** All post images and metadata are uploaded to IPFS via Pinata for permanent, decentralized storage.
+-   **Web3 Wallet Integration:** Seamlessly connect with the Keplr wallet to interact with the platform.
+-   **Modern Tech Stack:** Built with Next.js, React, and TypeScript for a fast, modern, and type-safe user experience.
 
-First, run the development server:
+### ⭐ Future Scope
 
-```bash
-npm i
-# then
-npm run dev
-# or
-yarn dev
-```
+-   **On-Chain Tipping & Rewards:** Implementing a direct peer-to-peer reward system.
+-   **DAO & Treasury Management:** Introducing a community-governed treasury and on-chain voting for proposals.
+-   **Rich Social Features:** Building out a richer social experience with on-chain comments, emoji reactions, and user profiles.
+
+---
+
+### 🚀 About Me
+
+-   **Name:** Ekrem Özcan
+-   **Bio:** A Computer Programming graduate from Turkey, passionate about diving deep into new technologies. This project is a part of my intensive learning operation, the "React Cooker," to master the React and Web3 ecosystems.
+-   **Bootcamp:** Transition to Web3 Bootcamp Learner @riseinweb3 | #RiseInWeb3
+-   **Connect:** You can follow my journey and other projects at my **[React-Cooker Organization on GitHub](https://github.com/React-Cooker)**.
+
+---
+
+### 🛠️ How to Install and Run Locally
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/yakupozcan/andromeda-bootcamp-submission.git](https://github.com/yakupozcan/andromeda-bootcamp-submission.git)
+    ```
+
+2.  **Navigate to the project directory:**
+    ```bash
+    cd andromeda-bootcamp-submission
+    ```
+
+3.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+4.  **Set up your environment variables:**
+    -   Create a `.env.local` file in the root directory.
+    -   Add your Pinata JWT key: `NEXT_PUBLIC_PINATA_JWT='YOUR_PINATA_JWT_KEY'`
+
+5.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-## Licensing
-
-[Terms and Conditions](https://github.com/andromedaprotocol/andromeda-core/blob/development/LICENSE/LICENSE.md)
