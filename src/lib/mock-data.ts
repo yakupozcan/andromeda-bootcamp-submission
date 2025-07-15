@@ -30,7 +30,7 @@ const daysAgo = (d: number) => hoursAgo(d * 24);
 
 // Generator
 export const generateMockPosts = (): Post[] => {
-  const posts: Post[] = [
+  const initialPosts = [
     {
       id: "1",
       authorUsername: "VaultExplorer",
@@ -40,42 +40,10 @@ export const generateMockPosts = (): Post[] => {
       content: "Kick-starting our community vault project. Share your ideas below!",
       imageUrl: "https://picsum.photos/seed/post1/600/400",
       comments: [
-        {
-          id: "c1-1",
-          authorUsername: "ChainGuru",
-          authorPFP: "https://picsum.photos/seed/cg/80/80",
-          text: "Great initiative!",
-          emojis: [],
-          tipAmount: 0,
-          timestamp: hoursAgo(2),
-        },
-        {
-          id: "c1-2",
-          authorUsername: "EmojiFan",
-          authorPFP: "https://picsum.photos/seed/ef/80/80",
-          text: "",
-          emojis: ["🚀", "🔥"],
-          tipAmount: 0,
-          timestamp: hoursAgo(1.5),
-        },
-        {
-          id: "c1-3",
-          authorUsername: "Tipster",
-          authorPFP: "https://picsum.photos/seed/tip/80/80",
-          text: "",
-          emojis: [],
-          tipAmount: 25,
-          timestamp: hoursAgo(1),
-        },
-        {
-          id: "c1-4",
-          authorUsername: "HybridUser",
-          authorPFP: "https://picsum.photos/seed/hy/80/80",
-          text: "Love this ❤️",
-          emojis: ["❤️"],
-          tipAmount: 10,
-          timestamp: hoursAgo(0.5),
-        },
+        { id: "c1-1", authorUsername: "ChainGuru", authorPFP: "https://picsum.photos/seed/cg/80/80", text: "Great initiative!", emojis: [], tipAmount: 0, timestamp: hoursAgo(2) },
+        { id: "c1-2", authorUsername: "EmojiFan", authorPFP: "https://picsum.photos/seed/ef/80/80", text: "", emojis: ["🚀", "🔥"], tipAmount: 0, timestamp: hoursAgo(1.5) },
+        { id: "c1-3", authorUsername: "Tipster", authorPFP: "https://picsum.photos/seed/tip/80/80", text: "", emojis: [], tipAmount: 25, timestamp: hoursAgo(1) },
+        { id: "c1-4", authorUsername: "HybridUser", authorPFP: "https://picsum.photos/seed/hy/80/80", text: "Love this ❤️", emojis: ["❤️"], tipAmount: 10, timestamp: hoursAgo(0.5) },
       ],
     },
     {
@@ -87,25 +55,9 @@ export const generateMockPosts = (): Post[] => {
       content: "Just snagged a rare piece on the marketplace—what do you think?",
       imageUrl: "https://picsum.photos/seed/post2/600/400",
       comments: [
-        {
-          id: "c2-1",
-          authorUsername: "ArtLover",
-          authorPFP: "https://picsum.photos/seed/al/80/80",
-          text: "Looks amazing!",
-          emojis: ["😍"],
-          tipAmount: 0,
-          timestamp: hoursAgo(10),
-        },
-        {
-          id: "c2-2",
-          authorUsername: "Collector42",
-          authorPFP: "https://picsum.photos/seed/co/80/80",
-          text: "",
-          emojis: ["👏"],
-          tipAmount: 5,
-          timestamp: hoursAgo(8),
-        },
-      ],
+          { id: "c2-1", authorUsername: "ArtLover", authorPFP: "https://picsum.photos/seed/al/80/80", text: "Looks amazing!", emojis: ["😍"], tipAmount: 0, timestamp: hoursAgo(10) },
+          { id: "c2-2", authorUsername: "Collector42", authorPFP: "https://picsum.photos/seed/co/80/80", text: "", emojis: ["👏"], tipAmount: 5, timestamp: hoursAgo(8) },
+      ]
     },
     {
       id: "3",
@@ -116,93 +68,44 @@ export const generateMockPosts = (): Post[] => {
       content: "Decentralized governance raises deep questions—let's discuss!",
       imageUrl: "https://picsum.photos/seed/post3/600/400",
       comments: [
-        {
-          id: "c3-1",
-          authorUsername: "Thinker",
-          authorPFP: "https://picsum.photos/seed/th/80/80",
-          text: "Interesting perspective 🤔",
-          emojis: ["🤔"],
-          tipAmount: 0,
-          timestamp: daysAgo(4.5),
-        },
-      ],
+        { id: "c3-1", authorUsername: "Thinker", authorPFP: "https://picsum.photos/seed/th/80/80", text: "Interesting perspective 🤔", emojis: ["🤔"], tipAmount: 0, timestamp: daysAgo(4.5) },
+      ]
     },
     {
-      id: "4",
-      authorUsername: "ChainExplorer",
-      authorPFP: "https://picsum.photos/seed/pfp4/100/100",
-      timestamp: daysAgo(10),
-      title: "New Opportunities on the Blockchain",
-      content: "Exploring fresh opportunities in the blockchain world!",
-      imageUrl: "https://picsum.photos/seed/post4/600/400",
-      comments: [
-        {
-          id: "c4-1",
-          authorUsername: "OpportunitySeeker",
-          authorPFP: "https://picsum.photos/seed/os/80/80",
-          text: "I'm in! 🚀",
-          emojis: ["🚀"],
-          tipAmount: 0,
-          timestamp: daysAgo(9),
-        },
-        {
-          id: "c4-2",
-          authorUsername: "Investor",
-          authorPFP: "https://picsum.photos/seed/inv/80/80",
-          text: "",
-          emojis: [],
-          tipAmount: 100,
-          timestamp: daysAgo(8.5),
-        },
-      ],
+        id: "4",
+        authorUsername: "ChainExplorer",
+        authorPFP: "https://picsum.photos/seed/pfp4/100/100",
+        timestamp: daysAgo(10),
+        title: "New Opportunities on the Blockchain",
+        content: "Exploring fresh opportunities in the blockchain world!",
+        imageUrl: "https://picsum.photos/seed/post4/600/400",
+        comments: [
+            { id: "c4-1", authorUsername: "OpportunitySeeker", authorPFP: "https://picsum.photos/seed/os/80/80", text: "I'm in! 🚀", emojis: ["🚀"], tipAmount: 0, timestamp: daysAgo(9) },
+            { id: "c4-2", authorUsername: "Investor", authorPFP: "https://picsum.photos/seed/inv/80/80", text: "", emojis: [], tipAmount: 100, timestamp: daysAgo(8.5) },
+        ]
     },
     {
-      id: "5",
-      authorUsername: "SmartContractor",
-      authorPFP: "https://picsum.photos/seed/pfp5/100/100",
-      timestamp: daysAgo(20),
-      title: "Let’s Talk Smart Contracts",
-      content: "Starting a discussion about smart contracts!",
-      imageUrl: "https://picsum.photos/seed/post5/600/400",
-      comments: [
-        {
-          id: "c5-1",
-          authorUsername: "DevDave",
-          authorPFP: "https://picsum.photos/seed/dd/80/80",
-          text: "Here's a tip for your great work!",
-          emojis: [],
-          tipAmount: 50,
-          timestamp: daysAgo(18),
-        },
-        {
-          id: "c5-2",
-          authorUsername: "LaughingLarry",
-          authorPFP: "https://picsum.photos/seed/ll/80/80",
-          text: "",
-          emojis: ["😂"],
-          tipAmount: 0,
-          timestamp: daysAgo(17.5),
-        },
-        {
-          id: "c5-3",
-          authorUsername: "SeriousSusan",
-          authorPFP: "https://picsum.photos/seed/ss/80/80",
-          text: "Great insights 🔥",
-          emojis: ["🔥"],
-          tipAmount: 0,
-          timestamp: daysAgo(17),
-        },
-      ],
-    },
+        id: "5",
+        authorUsername: "SmartContractor",
+        authorPFP: "https://picsum.photos/seed/pfp5/100/100",
+        timestamp: daysAgo(20),
+        title: "Let’s Talk Smart Contracts",
+        content: "Starting a discussion about smart contracts!",
+        imageUrl: "https://picsum.photos/seed/post5/600/400",
+        comments: [
+            { id: "c5-1", authorUsername: "DevDave", authorPFP: "https://picsum.photos/seed/dd/80/80", text: "Here's a tip for your great work!", emojis: [], tipAmount: 50, timestamp: daysAgo(18) },
+            { id: "c5-2", authorUsername: "LaughingLarry", authorPFP: "https://picsum.photos/seed/ll/80/80", text: "", emojis: ["😂"], tipAmount: 0, timestamp: daysAgo(17.5) },
+            { id: "c5-3", authorUsername: "SeriousSusan", authorPFP: "https://picsum.photos/seed/ss/80/80", text: "Great insights 🔥", emojis: ["🔥"], tipAmount: 0, timestamp: daysAgo(17) },
+        ]
+    }
   ];
 
-  // Aggregate totalTips and reactions for each post
-  return posts.map((p) => {
-    let totalTips = 0;
+  // This part calculates and adds the missing properties. This is the fix.
+  return initialPosts.map((p) => {
+    const totalTips = p.comments.reduce((sum, c) => sum + c.tipAmount, 0);
     const emojiCounts: Record<string, number> = {};
 
     p.comments.forEach((c) => {
-      totalTips += c.tipAmount;
       new Set(c.emojis).forEach((emoji) => {
         emojiCounts[emoji] = (emojiCounts[emoji] || 0) + 1;
       });
@@ -212,6 +115,7 @@ export const generateMockPosts = (): Post[] => {
       .sort((a, b) => b[1] - a[1])
       .map(([emoji, count]) => ({ emoji, count }));
 
+    // Return the complete Post object
     return {
       ...p,
       totalTips,
